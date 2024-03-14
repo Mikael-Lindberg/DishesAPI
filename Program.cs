@@ -1,7 +1,9 @@
 using AutoMapper;
 using DishesAPI.DbContexts;
 using DishesAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +16,16 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/dishes", async (DishesDbContext dishesDbContext, IMapper mapper) =>
+app.MapGet("/dishes", async (DishesDbContext dishesDbContext,
+    ClaimsPrincipal claimsPrincipal,
+    IMapper mapper, 
+    string? name) =>
 {
-    return mapper.Map<IEnumerable<DishDto>> (await dishesDbContext.Dishes.ToListAsync());
+    Console.WriteLine($"User authenticated? {claimsPrincipal.Identity?.IsAuthenticated}");
+
+    return mapper.Map<IEnumerable<DishDto>> (await dishesDbContext.Dishes
+        .Where(d => name == null || d.Name.Contains(name))
+        .ToListAsync());
 });
 
 app.MapGet("/dishes/{dishId:guid}", async (DishesDbContext dishesDbContext, IMapper mapper, Guid dishId) =>
