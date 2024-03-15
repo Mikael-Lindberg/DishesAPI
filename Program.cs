@@ -1,7 +1,6 @@
 using AutoMapper;
 using DishesAPI.DbContexts;
 using DishesAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
