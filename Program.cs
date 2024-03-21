@@ -15,10 +15,14 @@ builder.Services.AddDbContext<DishesDbContext>(o => o.UseSqlite(
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
+    app.UseExceptionHandler();
+    /*
     app.UseExceptionHandler(configureApplicationBuilder =>
     {
         configureApplicationBuilder.Run(
@@ -30,6 +34,7 @@ if (!app.Environment.IsDevelopment())
                 await context.Response.WriteAsync("An unexpected problem happened.");
             });
     });
+    */
 }
 
 app.UseHttpsRedirection();
